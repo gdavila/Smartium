@@ -36,49 +36,29 @@
 #include <stdio.h>
 #include <string.h>
 
-// Step 2. Variables declaration
 
-char  CONNECTOR_A[3] = "CA";      
-char  CONNECTOR_B[3] = "CB";    
-char  CONNECTOR_C[3] = "CC";
-char  CONNECTOR_D[3] = "CD";
-char  CONNECTOR_E[3] = "CE";
-char  CONNECTOR_F[3] = "CF";
-char  ACC_detection[10];
-  
-                                               
-char* NODE_ID="N0";   
+//**********************************************
+//**********************************************
+// 1. Declaracion de variables
 
-char* sleepTime = "00:01:00:00";   
 
-char data[100];     
-
-float temperatureVal;
-float dioxidoVal;
-char  dioxidoString[10];
-
+char   ACC_detection[10];                                             
+char*  NODE_ID="N01"; //Seleccionar el  ID de la lanza smartium
+char*  sleepTime = "00:01:00:00";   //Selecciona la frecuencia de mmuestreo/ sensado de variables   
+float temperatureVal;        //variable para almacenar el valor de la temperatura
+float dioxidoVal;            //variable para almacenar el valor del CO2
+char  dioxidoString[10];     //variable para almacenar el valor del CO2 como Strin
 char aux1[15];
 char aux2[15];
 
-
-float connectorAFloatValue; 
-float connectorBFloatValue;  
-float connectorCFloatValue;    
-float connectorDFloatValue;   
-float connectorEFloatValue;
-float connectorFFloatValue;
+float TemperatureFloatValue; 
+float HumidityFloatValue;  
+float CO2FloatValue;    
 
 
-char  connectorAString[10];  
-char  connectorBString[10];   
-char  connectorCString[10];
-char  connectorDString[10];
-char  connectorEString[10];
-char  connectorFString[10];
-
-char  ACC_X[3] = "AX";
-char  ACC_Y[3] = "AY";
-char  ACC_Z[3] = "AZ";
+char  TemperatureString[10];  
+char  HumidityString[10];   
+char  CO2String[10];
 
 int accelerometerX;
 int accelerometerY;
@@ -187,12 +167,12 @@ void Creat_frame()
     itoa(batteryLevel, batteryLevelString, 10);
 
     //Temperature - Reading
-    connectorAFloatValue = SensorGasv20.readValue(SENS_TEMPERATURE);
-    Utils.float2String(connectorAFloatValue, connectorAString, 2);
+    TemperatureFloatValue = SensorGasv20.readValue(SENS_TEMPERATURE);
+    Utils.float2String(TemperatureFloatValue, TemperatureString, 2);
 
     //Humedity - Reading
-    connectorBFloatValue = SensorGasv20.readValue(SENS_HUMIDITY);
-    Utils.float2String(connectorBFloatValue, connectorBString, 2);
+    HumidityFloatValue = SensorGasv20.readValue(SENS_HUMIDITY);
+    Utils.float2String(HumidityFloatValue, HumidityString, 2);
 
     //C02 - Reading 
     SensorGasv20.configureSensor(SENS_CO2, 1);
@@ -205,8 +185,8 @@ void Creat_frame()
     USB.println(dioxidoVal);
     USB.println(dioxidoString);
     dioxidoVal=(0.28-dioxidoVal)*1000;
-    connectorCFloatValue= pow(10, (dioxidoVal + 158.631) / 62.877 );
-    Utils.float2String(connectorCFloatValue, connectorCString, 2);
+    CO2FloatValue= pow(10, (dioxidoVal + 158.631) / 62.877 );
+    Utils.float2String(CO2FloatValue, CO2String, 2);
 
     USB.println(F("Creando Frame..."));
     
@@ -214,9 +194,9 @@ void Creat_frame()
     //frame.addSensor(SENSOR_ACC, accelerometerX, accelerometerY, accelerometerZ);
     //frame.addSensor(SENSOR_TIME, RTC.hour, RTC.minute, RTC.second );
     frame.addSensor(SENSOR_BAT, PWR.getBatteryLevel() );
-    frame.addSensor(SENSOR_TCA, connectorAFloatValue );
-    frame.addSensor(SENSOR_HUMA, connectorBFloatValue );
-    frame.addSensor(SENSOR_CO2, connectorCFloatValue );
+    frame.addSensor(SENSOR_TCA, TemperatureFloatValue );
+    frame.addSensor(SENSOR_HUMA, HumidityFloatValue );
+    frame.addSensor(SENSOR_CO2, CO2FloatValue );
     USB.println(ACC_detection);
     //sprintf(aux1, "ACC: %s", (char*) ACC_detection);
     strcpy(aux1, "ACC=");
